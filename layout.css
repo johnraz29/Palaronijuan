@@ -1,0 +1,140 @@
+/* Reset & base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+    color: #c8facc;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 15px 30px;
+    border-bottom: 2px solid #00ff7f;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header .logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+header .logo img {
+    width: 40px;  /* smaller logo */
+    height: 40px;
+}
+
+header h1 a {
+    color: #00ff7f;
+    text-decoration: none;
+    font-size: 1.4em; /* smaller than before (was 1.8em) */
+    font-weight: bold;
+}
+
+nav a {
+    color: #c8facc;
+    text-decoration: none;
+    margin-left: 25px;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: #00ff7f;
+    left: 0;
+    bottom: -4px;
+    transition: 0.3s;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+nav a:hover {
+    color: #00ff7f;
+}
+
+/* Flash messages */
+.flash {
+    margin: 20px auto;
+    padding: 12px 20px;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.flash.error {
+    background-color: rgba(255, 0, 0, 0.2);
+    color: #ff5555;
+}
+
+.flash.success {
+    background-color: rgba(0, 255, 127, 0.2);
+    color: #00ff7f;
+}
+
+/* Main content */
+main {
+    flex: 1;
+    padding: 30px;
+}
+
+.content {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: rgba(0,0,0,0.6);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 255, 127, 0.2);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 15px;
+    background-color: rgba(0,0,0,0.85);
+    border-top: 2px solid #00ff7f;
+    font-size: 0.9em;
+    color: #c8facc;
+}
+
+/* Responsive tabs */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+    }
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+    nav a {
+        margin-left: 0;
+    }
+}

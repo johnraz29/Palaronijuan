@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="/admin.css" />
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="logo">
+            <img src="/images/logo.png" alt="Logo">
+            <h1>Admin Panel</h1>
+        </div>
+        <div class="user-info">
+            <p>Logged in as <strong><%= user.name %></strong></p>
+        </div>
+    </header>
+<p><a href="/admin/result" class="result-btn">Enter Saturday Result</a></p>
+    <!-- TABS -->
+    <div class="dashboard-tabs">
+        <button class="tab-btn active" data-tab="users-tab">Users</button>
+        <button class="tab-btn" data-tab="tx-tab">Transactions</button>
+        <button class="tab-btn" data-tab="bets-tab">Bets</button>
+    </div>
+
+    <!-- USERS TAB -->
+    <section id="users-tab" class="tab-section active">
+        <h2>Users</h2>
+        <table>
+            <thead>
+                <tr><th>ID</th><th>Name</th><th>Email</th><th>Balance</th><th>Admin</th></tr>
+            </thead>
+            <tbody>
+                <% users.forEach(u => { %>
+                <tr>
+                    <td><%= u.id %></td>
+                    <td><%= u.name %></td>
+                    <td><%= u.email %></td>
+                    <td>₱<%= (u.balance||0).toFixed(2) %></td>
+                    <td><%= u.is_admin ? 'Yes' : 'No' %></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- TRANSACTIONS TAB -->
+    <section id="tx-tab" class="tab-section">
+        <h2>Transactions</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>GCash Number</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% txs.forEach(function(t) { 
+                    var user = users.find(u => u.id === t.user_id);
+                %>
+                <tr>
+                    <td><%= t.id %></td>
+                    <td><%= user ? user.name : 'User #' + t.user_id %></td>
+                    <td><%= t.type %></td>
+                    <td>₱<%= t.amount %></td>
+                    <td><%= t.type === 'withdraw' ? t.reference || 'N/A' : 'N/A' %></td>
+                    <td><%= t.status %></td>
+                    <td>
+                        <% if (t.type === 'topup' && t.status === 'pending') { %>
+                            <form method="post" action="/admin/tx/confirm">
+                                <input type="hidden" name="id" value="<%= t.id %>"/>
+                                <button>Confirm Topup</button>
+                            </form>
+                        <% } else if (t.type === 'withdraw' && t.status === 'pending') { %>
+                            <form method="post" action="/admin/tx/complete">
+                                <input type="hidden" name="id" value="<%= t.id %>"/>
+                                <button>Mark Paid</button>
+                            </form>
+                        <% } %>
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- BETS TAB -->
+    
+    <section id="bets-tab" class="tab-section">
+        <h2>Bets</h2>
+        <table>
+            <thead>
+                <tr><th>ID</th><th>User</th><th>Numbers</th><th>Amount</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                <% bets.forEach(b => { 
+                    var user = users.find(u => u.id === b.user_id);
+                %>
+                <tr>
+                    <td><%= b.id %></td>
+                    <td><%= user ? user.name : 'User #' + b.user_id %></td>
+                    <td><%= b.numbers %></td>
+                    <td>₱<%= b.amount %></td>
+                    <td><%= b.status %></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; <%= new Date().getFullYear() %> Admin Panel</p>
+    </footer>
+
+    <!-- TABS JS -->
+    <script>
+        const tabs = document.querySelectorAll('.tab-btn');
+        const sections = document.querySelectorAll('.tab-section');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

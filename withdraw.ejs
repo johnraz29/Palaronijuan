@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdraw</title>
+   <link rel="stylesheet" href="/withdraw.css" />
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="/images/logo.png" alt="Logo">
+            <h1>Withdraw Funds</h1>
+        </div>
+    </header>
+
+    <main>
+        <section class="withdraw-section">
+            <h2>Withdraw</h2>
+            <p>Enter amount and your GCash number. Admin will process withdrawals manually.</p>
+            
+            <form method="post" action="/withdraw" id="withdrawForm">
+                <label for="amount">Amount (PHP)</label>
+                <input id="amount" name="amount" type="number" step="1" min="100" max="100000" placeholder="100 - 100,000" required />
+
+                <label for="gcash_number">GCash Number</label>
+                <input id="gcash_number" name="gcash_number" type="text" maxlength="11" placeholder="11-digit GCash number" required />
+
+                <button type="submit">Request Withdraw</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <%= new Date().getFullYear() %> My Dashboard. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Frontend validation
+        const amountInput = document.getElementById('amount');
+        const gcashInput = document.getElementById('gcash_number');
+
+        // Prevent non-numeric input
+        amountInput.addEventListener('input', () => {
+            amountInput.value = amountInput.value.replace(/[^\d]/g, '');
+        });
+
+        gcashInput.addEventListener('input', () => {
+            gcashInput.value = gcashInput.value.replace(/[^\d]/g, '');
+        });
+
+        document.getElementById('withdrawForm').addEventListener('submit', e => {
+            const amount = parseInt(amountInput.value);
+            const gcash = gcashInput.value;
+
+            if (amount < 100 || amount > 100000) {
+                alert('Amount must be between ₱100 and ₱100,000');
+                e.preventDefault();
+            } else if (gcash.length !== 11) {
+                alert('GCash number must be exactly 11 digits');
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
